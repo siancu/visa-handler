@@ -6,7 +6,6 @@ A tool to extract credit card transactions from PostFinance Visa PDF statements 
 
 ```
 visa-ingester.py   # Main script: PDF → SQLite (executable, uses uv shebang)
-visa.db            # SQLite database with all transactions
 ```
 
 ## Key Details
@@ -31,19 +30,15 @@ DD.MM.YY DD.MM.YY MERCHANT_NAME LOCATION COUNTRY    AMOUNT
 
 ### Add new statements
 ```bash
-./visa-ingester.py /path/to/new/pdfs/
+./visa-ingester.py -d /path/to/visa.db /path/to/pdfs/
 ```
 
 ### Query the database
 ```bash
-sqlite3 visa.db "SELECT * FROM transactions WHERE merchant LIKE '%NETFLIX%';"
+sqlite3 /path/to/visa.db "SELECT * FROM transactions WHERE merchant LIKE '%NETFLIX%';"
 ```
 
 ### Rebuild database from scratch
 ```bash
-rm visa.db && ./visa-ingester.py /Users/si/SynologyDrive/Documents/Extern/VISA/
+rm /path/to/visa.db && ./visa-ingester.py -d /path/to/visa.db /path/to/pdfs/
 ```
-
-## PDF Source Location
-
-Main PDF archive: `/Users/si/SynologyDrive/Documents/Extern/VISA/`

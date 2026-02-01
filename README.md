@@ -11,21 +11,13 @@ Extract charges from PostFinance Visa credit card PDF statements into a SQLite d
 
 ```bash
 # Process all PDFs in a directory
-./visa-ingester.py /path/to/pdfs/
+./visa-ingester.py -d /path/to/visa.db /path/to/pdfs/
 
 # Process a single PDF
-./visa-ingester.py "VISA - 2026-01.pdf"
-
-# Use a custom database file
-./visa-ingester.py -d custom.db /path/to/pdfs/
+./visa-ingester.py -d /path/to/visa.db statement.pdf
 
 # Show help
 ./visa-ingester.py --help
-```
-
-Alternatively, run with uv explicitly:
-```bash
-uv run visa-ingester.py /path/to/pdfs/
 ```
 
 ## Database Schema
@@ -54,11 +46,11 @@ sqlite3 visa.db "SELECT strftime('%Y', entry_date) as year, printf('%.2f', SUM(C
 # Top 10 merchants by spending
 sqlite3 visa.db "SELECT merchant, printf('%.2f', SUM(amount_chf)) as total FROM transactions WHERE NOT is_credit GROUP BY merchant ORDER BY SUM(amount_chf) DESC LIMIT 10;"
 
-# Monthly spending for 2024
+# Monthly spending for current year
 sqlite3 visa.db "SELECT strftime('%Y-%m', entry_date) as month, printf('%.2f', SUM(CASE WHEN is_credit THEN -amount_chf ELSE amount_chf END)) as total FROM transactions WHERE entry_date LIKE '2024%' GROUP BY month ORDER BY month;"
 
-# All Apple transactions
-sqlite3 visa.db "SELECT entry_date, merchant, amount_chf FROM transactions WHERE merchant LIKE '%APPLE%' ORDER BY entry_date DESC;"
+# Search transactions by merchant
+sqlite3 visa.db "SELECT entry_date, merchant, amount_chf FROM transactions WHERE merchant LIKE '%SEARCH_TERM%' ORDER BY entry_date DESC;"
 ```
 
 ## Notes
