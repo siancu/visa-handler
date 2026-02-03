@@ -26,10 +26,19 @@ DD.MM.YY DD.MM.YY MERCHANT_NAME LOCATION COUNTRY    AMOUNT
 - Category appears on the following line
 - Foreign currency transactions have sub-lines for exchange rate and processing surcharge (skipped)
 
+## Environment Variables
+
+- `VISA_DB_PATH`: Path to SQLite database (default: `visa.db`)
+
 ## Common Tasks
 
 ### Add new statements
 ```bash
+# Using environment variable
+export VISA_DB_PATH=/path/to/visa.db
+./visa-ingester.py /path/to/pdfs/
+
+# Or using -d flag
 ./visa-ingester.py -d /path/to/visa.db /path/to/pdfs/
 ```
 

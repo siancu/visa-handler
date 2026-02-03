@@ -11,9 +11,13 @@ Usage:
     uv run visa-ingester.py /path/to/pdfs/                     # Process all PDFs in directory
     uv run visa-ingester.py "VISA - 2024-08.pdf"               # Process specific file
     uv run visa-ingester.py -d custom.db /path/to/pdfs/        # Use custom database name
+
+Environment:
+    VISA_DB_PATH    Path to SQLite database (default: visa.db)
 """
 
 import argparse
+import os
 import re
 import sqlite3
 from dataclasses import dataclass
@@ -233,8 +237,8 @@ def main():
     )
     parser.add_argument(
         "-d", "--database",
-        default="visa.db",
-        help="SQLite database file (default: visa.db)",
+        default=os.environ.get("VISA_DB_PATH", "visa.db"),
+        help="SQLite database file (default: $VISA_DB_PATH or visa.db)",
     )
     args = parser.parse_args()
 
